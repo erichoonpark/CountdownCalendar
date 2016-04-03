@@ -1,46 +1,35 @@
+var PDFDocument = require('pdfkit');
+
 //BackEnd Shit
-var doc = new PDFDocument({
-  size: "Legal",
-  layout : 'landscape',
-  margins : {
-         top: 0, 
-         bottom: 0,
-         left: 0,
-         right: 0
-     },
-});
+//Specify the size of the paper
+module.exports = function(eventName, numberOfDays, res) {
+	var doc = new PDFDocument({size: [1296,863.99999999999]});
+	doc.pipe(res);
 
-var stream = doc.pipe(blobStream());
+	//Reformat the layout
+	//Border
+	doc.lineWidth(10)
+	    .rect(10,10,1275, 840).stroke()
+	    
+	// draw some text
+	doc.fontSize(450)
+	   .text(numberOfDays, 250, 90);
 
-var eventdays;
+	// draw some text
+	doc.fontSize(150)
+	   .text('Days Until', 300, 480);
 
-for(eventdays>0){
-
-doc.addPage();
-
-//Border
-doc.lineWidth(10)
-    .rect(10,10,988, 590).stroke()
-
-
-//Text
-doc.fontSize(250)
-   .moveDown(.3)
-   .text(eventdays, {align:"center"}),
-
-doc.fontSize(120)
-   .moveUp(.5)
-   .text('Days Until',{align:"center"});
-   
-doc.fontSize(140)
-   .moveUp(.1)
-   .text('Event Name',{align:"center"});
-
-eventdays--;
+	// draw some text
+	doc.fontSize(150)
+	   .text(eventName, 250, 618);
+	   
+	// end and display the document in the iframe to the right
+	doc.end();
+	//Send the numberOfDays and eventName to BackEnd
+	//Return a formatted pdf with correct numberOfDays and eventName
 };
 
-// end and display the document in the iframe to the right
-doc.end();
-stream.on('finish', function() {
-  iframe.src = stream.toBlobURL('application/pdf');
-});
+//For Loop to render page until numberOfDays == 0
+for (; numberOfDays >= 0; numberOfDays--) {
+	
+}

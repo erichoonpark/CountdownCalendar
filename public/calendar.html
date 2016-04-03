@@ -1,0 +1,102 @@
+<html>
+<head>
+	<link rel="icon" href="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/calendar-128.png">
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="http://www.ogonek.net/mousewheel/jQuery_mousewheel_plugin.js"></script>
+</head>
+<body>
+	<div id="sidebar" class="col-xs-4 col-md-3">
+		<h1>Sidebar</h1>
+		<div class="form-group">
+			<label for="number-of-days">Number of Days</label>
+			<input id = "number-of-days" type="text" class="form-control" placeholder="100" aria-describedby="basic-addon1">
+		</div>
+		<div class="form-group">
+			<label for="event-name">Event Name</label>
+			<input id ="event-name" type="text" class="form-control" placeholder="Will's Bitchin Party" aria-describedby="basic-addon1">
+		</div>
+		<div class="btn-group" role="group" aria-label="Basic example">
+			<ul class="nav nav-pills">
+				<li class="dropdown active">
+					<a href="#" data-toggle="dropdown" class="dropdown-toggle">Buy!<b class="caret"></b></a>
+					<ul class="dropdown-menu" id="menu1">
+						<li><a href="#">My Custom!</a></li>
+						<li class="divider"></li>
+						<li><a href="#">Boring Default</a></li>
+					</ul>
+				</li>
+				<li class=""><a id="download_button" href="#">Download</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="previewpane" class="col-xs-8 col-md-9">
+		<div id="pdfdiv">
+			<div id="days-until">
+				<h1 class="daysnumber">100</h1>
+				<h1 class="daystext">Days Until</h1>
+				<h1 class="eventname">Event Name</h1>
+			</div>
+		</div>
+	</div>
+	<script>
+		//Global Variables
+		var numberOfDays = 100;
+		var eventName = "Will's Bitchin Party";
+		var displayedNumberOfDays;
+
+		//Update Number of Days
+		function updateNumberOfDays() {
+			numberOfDays = document.getElementById("number-of-days").value;
+			$(".daysnumber").text(numberOfDays);
+			displayedNumberOfDays = numberOfDays;
+			updateDays();
+
+		}
+
+		//Update Event Name
+		function updateEventName(){
+			eventName = document.getElementById("event-name").value;
+			$(".eventname").text(eventName);
+		}
+
+		//Updates Days
+		function updateDays(){
+			if(displayedNumberOfDays == 1){
+				$(".daystext").text("Day Until");
+			} else {
+				$(".daystext").text("Days Until");
+			}
+			
+		}
+
+		//Event Trigger for Number of Days
+		$("#number-of-days").keyup(updateNumberOfDays);
+
+		//Event Trigger for Event Name
+		$("#event-name").keyup(updateEventName);
+
+
+		//Mouse Scroll for Days Change
+		$("#previewpane").mousewheel(function(objEvent, intDelta){
+			updateDays();
+			if((displayedNumberOfDays < numberOfDays) && (intDelta>0)){
+				displayedNumberOfDays++;
+				$(".daysnumber").text(displayedNumberOfDays);
+			}
+			else if((displayedNumberOfDays > 0)&& (intDelta<0)){
+				displayedNumberOfDays--;
+				$(".daysnumber").text(displayedNumberOfDays);
+			}
+		})
+
+		//Create a query once the download button is created
+		$("#download_button").click(function(){
+			var url = "/?"+$.param({event: eventName, days: numberOfDays});
+			window.location.href = url;
+		});
+		</script>
+	</body>
+	</html>
